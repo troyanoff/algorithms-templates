@@ -1,1 +1,2 @@
-print((9 + 1) % 15)
+commands = [value for value in input().strip().split()]
+print(commands)
