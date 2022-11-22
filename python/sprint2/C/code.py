@@ -11,9 +11,19 @@ if LOCAL:
 
 
 def solution(node, idx):
-    # Your code
-    # ヽ(´▽`)/
-    pass
+    if idx == 0:
+        new_head = node.next_item
+        return new_head
+    index = 0
+    head = node
+    while index != idx:
+        previous_node = node
+        node = node.next_item
+        index += 1
+    previous_node.next_item = node.next_item
+    return head
+    
+
 
 def test():
     node3 = Node("node3", None)

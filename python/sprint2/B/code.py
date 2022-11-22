@@ -10,9 +10,9 @@ if LOCAL:
             self.next_item = next_item
 
 def solution(node):
-    # Your code
-    # ヽ(´▽`)/
-    pass
+    while node:
+        print(node.value)
+        node = node.next_item
 
 def test():
     node3 = Node("node3", None)

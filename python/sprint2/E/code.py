@@ -11,10 +11,22 @@ if LOCAL:
             self.prev = prev
 
 def solution(node):
-    # Your code
-    # ヽ(´▽`)/
-    pass
-
+    while node:
+        if node.prev is None:
+            node.prev = node.next
+            node.next = None 
+        elif node.next is None:
+            head = node
+            node.next = node.prev
+            node.prev = None
+        else:
+            node_next = node.next
+            node.next = node.prev
+            node.prev = node_next
+        node = node.prev
+    return head
+    
+            
 def test():
     node3 = DoubleConnectedNode("node3")
     node2 = DoubleConnectedNode("node2")
