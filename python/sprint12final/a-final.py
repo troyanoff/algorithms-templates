@@ -13,51 +13,80 @@ class Deque:
         # Определяем размер заполненной очереди.
         self.size = 0
 
-    # Метод проверяет, пуста ли очередь.
     def is_empty(self):
+    """Метод проверяет, пуста ли очередь."""
         return self.size == 0
 
-    # Метод проверяет, заполнена ли очередь.
     def is_full(self):
+    """Метод проверяет, заполнена ли очередь."""
         return self.size == self.max_n
 
-    # Метод добавляет значение в конец очереди.
     def push_back(self, value):
+    """Метод добавляет значение в конец очереди."""
         # Помещаем входящее значение в конец 
         self.deque[self.tail] = value
+        # Смещаем индекс первой пустой ячейки.
         self.tail = (self.tail + 1) % self.max_n
+        # Увеличиваем размер очереди.
         self.size += 1
 
     def push_front(self, value):
-        if self.is_full():
-            return 'error'
+    """Метод добавляет значение в начало очереди."""
+        # Сразу смещаем индекс первого эл-та в очереди.
         self.head = (self.head - 1 + self.max_n) % self.max_n
+        # Добавляем в него входящее значение.
         self.deque[self.head] = value
+        # Увеличиваем размер очереди.
         self.size += 1
 
     def pop_back(self):
+    """Удаляем последний элемент очереди."""
+        # Для начала проверяем не пуста ли очередь.
         if self.is_empty():
             return 'error'
+        # Смещаем индекс хвоста на -1.
+        # Теперь он указывает на последнее значение.
         self.tail = (self.tail - 1 + self.max_n) % self.max_n
+        # Запоминаем это значение для вывода.
         pop_value = self.deque[self.tail]
+        # Удаляем это значение из очереди.
         self.deque[self.tail] = None
+        # Уменьшаем размер очереди.
         self.size -= 1
         return pop_value
 
     def pop_front(self):
+    """Удаляем первый элемент очереди."""
+        # Для начала проверяем не пуста ли очередь.
         if self.is_empty():
             return 'error'
+         # Запоминаем значение для вывода.
         pop_value = self.deque[self.head]
+        # Удаляем это значение из очереди.
         self.deque[self.head] = None
+        # Смещаем индекс головы на первый элемент в очереди.
         self.head = (self.head + 1) % self.max_n
+        # Уменьшаем размер очереди.
         self.size -= 1
         return pop_value
 
 def deque_process(max_size, commands):
+    """
+    Функция принимает на вход максимальную длинну и список команд 
+    для работы с очередью типа дек через класс Deque:
+    создание экземпляра класса с последующей обработкой команд
+    и вывода промежуточных результатов.
+    """
+    # Создаем экземпляр дека той длинны, которая передана на вход.
     deque = Deque(n = max_size)
+    # Определяем команды для добавления элеметнов.
+    push_commands = ['push_back', 'push_front']
+    # Далее проходим по списку команд, выполняя их.
     for command in commands:
-        if ((command[0] == 'push_back' or command[0] == 'push_front')
-            and deque.is_full()):
+        # Проверку на полную очередь я перенес сюда, 
+        # убрав из методов класса, т.к. условия вывода из задания
+        # заставили бы меня сильно усложнить там код.
+        if ((command[0] in push_commands) and deque.is_full()):
             print('error')
         elif command[0] == 'push_back':
             deque.push_back(int(command[1]))
