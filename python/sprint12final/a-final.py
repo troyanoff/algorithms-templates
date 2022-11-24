@@ -1,21 +1,29 @@
 # 75798714
 class Deque:
+    """Класс для реализации очереди типа дек."""
     def __init__(self, n):
+        # Для реализации логики сразу создаем список заданной длинны.
         self.deque = [None] * n
+        # Запоминаем максимальную длинну очереди
         self.max_n = n
+        # Определяем индекс начала списка, "головы".
         self.head = 0
+        # Определяем индекс первого пустого эл-та с конца, "хвост".
         self.tail = 0
+        # Определяем размер заполненной очереди.
         self.size = 0
 
+    # Метод проверяет, пуста ли очередь.
     def is_empty(self):
         return self.size == 0
 
+    # Метод проверяет, заполнена ли очередь.
     def is_full(self):
         return self.size == self.max_n
 
+    # Метод добавляет значение в конец очереди.
     def push_back(self, value):
-        if self.is_full():
-            return 'error'
+        # Помещаем входящее значение в конец 
         self.deque[self.tail] = value
         self.tail = (self.tail + 1) % self.max_n
         self.size += 1
