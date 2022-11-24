@@ -98,9 +98,16 @@ def deque_process(max_size, commands):
             print(deque.pop_front())
 
 def read_input():
+    """
+    Функция для считывания числа команд, максимального размера очереди
+    и самих команд, формируя общий список команд, удобный для обработки.
+    Выводит максимальную длинну очереди и список команд.
+    """
     count_commands = int(input())
     max_size = int(input())
     commands = []
+    # Считываем заданное количество комманд,
+    # Добавляя их в общий список на вывод.
     for _ in range(count_commands):
         commands.append(input().strip().split())
     return max_size, commands
