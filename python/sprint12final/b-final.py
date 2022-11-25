@@ -1,51 +1,55 @@
-# 76009632
-class Stack:
-    # Создаем список примежуточных результатов (СПР).
-    def __init__(self):
-        self.result = []
-    
-    # Метод добавляет числа в СПР.
-    def push(self, value):
-        self.result.append(value)
-    
-    # Метод производит арифметическую операцию исходя из входящего знака.
-    def action(self, sign):
-        # "Отрезаем" последний элемент СПР, второй по порядку вхождения в СПР.
-        second = self.result.pop()
-        # Еще раз "отрезаем" эл-т. Он первый по порядку вхождения в СПР.
-        first = self.result.pop()
-        # Производим операцию с подготовленными эл-ми СПР исходя из знака на входе.
-        if sign == '*':
-            self.result.append(first * second)
-        elif sign == '/':
-            self.result.append(first // second)
-        elif sign == '+':
-            self.result.append(first + second)
-        elif sign == '-':
-            self.result.append(first - second)
-    
-    # Метод возвращает промежуточный/конечный результат из СПР.
-    def return_result(self):
-        return self.result[-1]
+# 76212674
+class StackIsEmpty(Exception):
+    """Исключение для пустом стэке."""
+    pass
 
-# Функция для расчета результата входящего выражения.
+class Stack:
+    """Класс для реализации стэка."""
+
+    def __init__(self):
+        """Создаем список примежуточных результатов (СПР)."""
+        self.__result = []
+
+    def push(self, value):
+        """Метод добавляет числа в СПР."""
+        self.__result.append(value)
+
+    def pop(self):
+        """Метод возвращает промежуточный/конечный результат из СПР."""
+        # Метод is_empty посчитал избыточным.
+        if len(self.__result) == 0:
+            raise StackIsEmpty('Стэк пуст.')
+        return self.__result.pop()
+
 def calculation(data):
+    """Функция для расчета результата входящего выражения."""
     stack = Stack()
-    # Заранее определяем список знаков.
-    list_sign = '*/+-'
+    # Определяем лямбда-функции для каждого str-знака.
+    operators = {
+            '+': lambda first, second: first + second,
+            '-': lambda first, second: first - second,
+            '*': lambda first, second: first * second,
+            '/': lambda first, second: first // second,
+        }
     for value in data:
         # Проверяем является ли элемент знаком.
-        if value in list_sign:
+        if value in operators:
+            # "Отрезаем" последний элемент СПР, второй по порядку вхождения в СПР.
+            second = stack.pop()
+            # Еще раз "отрезаем" эл-т. Он первый по порядку вхождения в СПР.
+            first = stack.pop()
             # Если да, то производим мат. операцию.
-            stack.action(value)
+            stack.push(operators[value](first, second))
         else:
             # Иначе, просто добавляем в СПР.
             stack.push(int(value))
-    # После перебора всех элементов входящего выражения, выводим результат.
-    return stack.return_result()
+    # После перебора всех элементов входящего выражения,
+    # выводим последний эл-т стэка. По всей логике, это результат вычислений.
+    return stack.pop()
         
 
 def read_input():
+    """Функция считывания данных."""
     return input().strip().split()
 
 def main():
