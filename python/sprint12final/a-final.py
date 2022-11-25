@@ -1,77 +1,93 @@
-# 75798714
+# 76203568
 class Deque:
     """Класс для реализации очереди типа дек."""
+
     def __init__(self, n):
         # Для реализации логики сразу создаем список заданной длинны.
-        self.deque = [None] * n
+        self.__deque = [None] * n
         # Запоминаем максимальную длинну очереди
-        self.max_n = n
+        self.__max_n = n
         # Определяем индекс начала списка, "головы".
-        self.head = 0
+        self.__head = 0
         # Определяем индекс первого пустого эл-та с конца, "хвост".
-        self.tail = 0
+        self.__tail = 0
         # Определяем размер заполненной очереди.
-        self.size = 0
+        self.__size = 0
+
+    def __offset_index(self, index, offset):
+        """Метод для смещения индекса."""
+        # Проверяем куда нужно сместить индекс.
+        if offset == 'forward':
+            index = (index + 1) % self.__max_n
+        # По идее, лишнее обращение к переменной, поэтому esle на доверии.
+        else:
+            index = (index - 1 + self.__max_n) % self.__max_n
+        return index
 
     def is_empty(self):
-    """Метод проверяет, пуста ли очередь."""
-        return self.size == 0
+        """Метод проверяет, пуста ли очередь."""
+        return self.__size == 0
 
     def is_full(self):
-    """Метод проверяет, заполнена ли очередь."""
-        return self.size == self.max_n
+        """Метод проверяет, заполнена ли очередь."""
+        return self.__size == self.__max_n
 
     def push_back(self, value):
-    """Метод добавляет значение в конец очереди."""
+        """Метод добавляет значение в конец очереди."""
+        if self.is_full():
+            return 'error'
         # Помещаем входящее значение в конец 
-        self.deque[self.tail] = value
+        self.__deque[self.__tail] = value
         # Смещаем индекс первой пустой ячейки.
-        self.tail = (self.tail + 1) % self.max_n
+        self.__tail = self.__offset_index(self.__tail, 'forward')
         # Увеличиваем размер очереди.
-        self.size += 1
+        self.__size += 1
 
     def push_front(self, value):
-    """Метод добавляет значение в начало очереди."""
+        """Метод добавляет значение в начало очереди."""
+        if self.is_full():
+            return 'error'
         # Сразу смещаем индекс первого эл-та в очереди.
-        self.head = (self.head - 1 + self.max_n) % self.max_n
+        self.__head = self.__offset_index(self.__head, 'back')
         # Добавляем в него входящее значение.
-        self.deque[self.head] = value
+        self.__deque[self.__head] = value
         # Увеличиваем размер очереди.
-        self.size += 1
+        self.__size += 1
 
     def pop_back(self):
-    """Удаляем последний элемент очереди."""
+        """Удаляем последний элемент очереди."""
         # Для начала проверяем не пуста ли очередь.
         if self.is_empty():
             return 'error'
         # Смещаем индекс хвоста на -1.
         # Теперь он указывает на последнее значение.
-        self.tail = (self.tail - 1 + self.max_n) % self.max_n
+        self.__tail = self.__offset_index(self.__tail, 'back')
         # Запоминаем это значение для вывода.
-        pop_value = self.deque[self.tail]
+        pop_value = self.__deque[self.__tail]
         # Удаляем это значение из очереди.
-        self.deque[self.tail] = None
+        self.__deque[self.__tail] = None
         # Уменьшаем размер очереди.
-        self.size -= 1
+        self.__size -= 1
         return pop_value
 
     def pop_front(self):
-    """Удаляем первый элемент очереди."""
+        """Удаляем первый элемент очереди."""
         # Для начала проверяем не пуста ли очередь.
         if self.is_empty():
             return 'error'
          # Запоминаем значение для вывода.
-        pop_value = self.deque[self.head]
+        pop_value = self.__deque[self.__head]
         # Удаляем это значение из очереди.
-        self.deque[self.head] = None
+        self.__deque[self.__head] = None
         # Смещаем индекс головы на первый элемент в очереди.
-        self.head = (self.head + 1) % self.max_n
+        self.__head = self.__offset_index(self.__head, 'forward')
         # Уменьшаем размер очереди.
-        self.size -= 1
+        self.__size -= 1
         return pop_value
 
 def deque_process(max_size, commands):
-    """
+    """Функция для работы с дек-очередью.
+    
     Функция принимает на вход максимальную длинну и список команд 
     для работы с очередью типа дек через класс Deque:
     создание экземпляра класса с последующей обработкой команд
@@ -82,23 +98,19 @@ def deque_process(max_size, commands):
     # Определяем команды для добавления элеметнов.
     push_commands = ['push_back', 'push_front']
     # Далее проходим по списку команд, выполняя их.
-    for command in commands:
-        # Проверку на полную очередь я перенес сюда, 
-        # убрав из методов класса, т.к. условия вывода из задания
-        # заставили бы меня сильно усложнить там код.
-        if ((command[0] in push_commands) and deque.is_full()):
+    for command, *value in commands:
+        # Проверку на полную очередь c выводом ошибки.
+        if ((command in push_commands) and deque.is_full()):
             print('error')
-        elif command[0] == 'push_back':
-            deque.push_back(int(command[1]))
-        elif command[0] == 'push_front':
-            deque.push_front(int(command[1]))
-        elif command[0] == 'pop_back':
-            print(deque.pop_back())
-        elif command[0] == 'pop_front':
-            print(deque.pop_front())
+        # Если команда на добавление, то передаем значение.
+        elif command in push_commands:
+            getattr(deque, command)(int(value[0]))
+        else:
+            print(getattr(deque, command)())
 
 def read_input():
-    """
+    """Функция считывания данных для дек-очереди.
+    
     Функция для считывания числа команд, максимального размера очереди
     и самих команд, формируя общий список команд, удобный для обработки.
     Выводит максимальную длинну очереди и список команд.
@@ -118,3 +130,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
