@@ -1,4 +1,4 @@
-# 76212674
+# 76384572
 class StackIsEmpty(Exception):
     """Исключение для пустом стэке."""
     pass
@@ -16,10 +16,10 @@ class Stack:
 
     def pop(self):
         """Метод возвращает промежуточный/конечный результат из СПР."""
-        # Метод is_empty посчитал избыточным.
-        if len(self.__result) == 0:
+        try:
+            return self.__result.pop()
+        except KeyError:
             raise StackIsEmpty('Стэк пуст.')
-        return self.__result.pop()
 
 def calculation(data):
     """Функция для расчета результата входящего выражения."""

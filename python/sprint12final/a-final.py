@@ -1,4 +1,4 @@
-# 76203568
+# 76381186
 class Deque:
     """Класс для реализации очереди типа дек."""
 
@@ -14,15 +14,15 @@ class Deque:
         # Определяем размер заполненной очереди.
         self.__size = 0
 
-    def __offset_index(self, index, offset):
+    def __offset_index(self, index, offset_forward=True):
         """Метод для смещения индекса."""
-        # Проверяем куда нужно сместить индекс.
-        if offset == 'forward':
-            index = (index + 1) % self.__max_n
-        # По идее, лишнее обращение к переменной, поэтому esle на доверии.
+        # Смещаем либо вперед, либо назад.
+        if offset_forward:
+            index += 1
         else:
-            index = (index - 1 + self.__max_n) % self.__max_n
-        return index
+            index -= 1
+        # Выводим модуль.
+        return index % self.__max_n
 
     def is_empty(self):
         """Метод проверяет, пуста ли очередь."""
@@ -40,7 +40,7 @@ class Deque:
         # Помещаем входящее значение в конец 
         self.__deque[self.__tail] = value
         # Смещаем индекс первой пустой ячейки.
-        self.__tail = self.__offset_index(self.__tail, 'forward')
+        self.__tail = self.__offset_index(self.__tail)
         # Увеличиваем размер очереди.
         self.__size += 1
 
@@ -50,7 +50,7 @@ class Deque:
         if self.is_full():
             return 'error'
         # Сразу смещаем индекс первого эл-та в очереди.
-        self.__head = self.__offset_index(self.__head, 'back')
+        self.__head = self.__offset_index(self.__head, False)
         # Добавляем в него входящее значение.
         self.__deque[self.__head] = value
         # Увеличиваем размер очереди.
@@ -63,7 +63,7 @@ class Deque:
             return 'error'
         # Смещаем индекс хвоста на -1.
         # Теперь он указывает на последнее значение.
-        self.__tail = self.__offset_index(self.__tail, 'back')
+        self.__tail = self.__offset_index(self.__tail, False)
         # Запоминаем это значение для вывода.
         pop_value = self.__deque[self.__tail]
         # Удаляем это значение из очереди.
@@ -82,7 +82,7 @@ class Deque:
         # Удаляем это значение из очереди.
         self.__deque[self.__head] = None
         # Смещаем индекс головы на первый элемент в очереди.
-        self.__head = self.__offset_index(self.__head, 'forward')
+        self.__head = self.__offset_index(self.__head)
         # Уменьшаем размер очереди.
         self.__size -= 1
         return pop_value
@@ -100,13 +100,12 @@ def deque_process(max_size, commands):
     # Определяем команды для добавления элеметнов.
     push_commands = ['push_back', 'push_front']
     # Далее проходим по списку команд, выполняя их.
-    for command, *value in commands:
-        # Проверку на полную очередь c выводом ошибки.
-        if ((command in push_commands) and deque.is_full()):
-            print('error')
+    for command, *element in commands:
         # Если команда на добавление, то передаем значение.
-        elif command in push_commands:
-            getattr(deque, command)(int(value[0]))
+        if command in push_commands:
+            result = getattr(deque, command)(element[0])
+            if result is not None:
+                print(result)
         else:
             print(getattr(deque, command)())
 
