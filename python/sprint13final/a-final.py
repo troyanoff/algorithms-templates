@@ -1,17 +1,19 @@
 def search_target(nums, target, left, right):
-    len_nums = right - left
-    mid = len_nums // 2
-    nums_mid = nums[mid]
-    if len_nums == 0:
-        return -1
-    elif len_nums == 1 and nums[0] != target:
-        return -1
-    elif nums_mid == target:
-        return mid + left
-    elif nums_mid > target:
-        return search_target(nums[:mid], target, left, left + mid)
-    else:
-        return search_target(nums[mid:], target, left + mid, right)
+    start = left
+    end = right
+    left = 0
+    right = end - start
+    while left < right:
+        mid = (right + left) // 2
+        nums_mid = nums[mid]
+        if nums_mid == target:
+            return start + mid
+        elif nums_mid > target:
+            right = mid - 1
+        else:
+            left = mid + 1
+    return -1
+    
 
 def search_start(nums, left, right):
     len_nums = right - left
@@ -33,7 +35,9 @@ def check_broken(arr):
     return arr[0] > arr[-1]
 
 def check_target(arr, target, broken):
-    if broken:
+    if arr == []:
+        return False
+    elif broken:
         return arr[0] <= target
     else:
         return arr[0] <= target <= arr[-1]
@@ -44,6 +48,8 @@ def normal_search(nums, target, left, right):
         return nums, left, right
     nums_mid = nums[:mid]
     nums_mid_ = nums[mid:]
+    if right - left -1 == 0:
+        return nums_mid_, mid + left, right
     broken_left = check_broken(nums_mid)
     left_target = check_target(nums_mid, target, broken_left)
     if broken_left:
@@ -64,7 +70,7 @@ def broken_search(nums, target) -> int:
         return search_target(nums[start:], target, start, len_nums)
     else:
         return search_target(nums[:start], target, 0, start)
-    # normal, left, right = normal_search(nums, target, 0, len_nums)
+    # normal, left, right = normal_search(nums, target, 0, len_nums-1)
     # try:
     #     return normal.index(target) + left
     # except:
