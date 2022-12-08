@@ -1,19 +1,14 @@
-# 78957608
+# 79025095
 def check_left(participant, pivot):
     """Проверяет, что участник сильнее опорного."""
     # Распаковываем информацию, для экономии времени.
     part_name, part_result, part_fine = participant
     pivot_name, pivot_result, pivot_fine = pivot
-    # При равном кол-ве решенных задач, проверяем штраф.
     if part_result == pivot_result:
-        # При равном штрафе, проверяем насколько сильно их имя.
         if part_fine == pivot_fine:
-            # Чем unicode-шифр больше, тем слабее имя.
             return part_name < pivot_name
         else:
-            # Если штраф меньше, участник сильнее.
             return part_fine < pivot_fine
-    # Если предыдущий блок пропущен, проверяем кол-во задач.
     return part_result > pivot_result
 
 def check_right(participant, pivot):
