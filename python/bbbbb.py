@@ -29,13 +29,14 @@ def econ_quick_sort(count, arr):
     # Запоминаем опорный элемент.
     arr_pivot = arr[pivot]
     # След. блок будет выполняться пока не сойдутся указатели окончаний.
-    while right != left:
+    while right > left:
         # Двигаем левый указатель, пока он соответсвует условиям.
         while check_smart(arr[left], arr_pivot):
             left += 1
         # Аналогично правый.
         while not check_smart(arr[right], arr_pivot):
             right -= 1
+        print(left, right)
         # Если нашлись несоответсвующие условиям эл-ты, меняем их местами.
         arr[left], arr[right] = arr[right], arr[left]
     # Соединяем массив тех, кто сильнее, с теми, кто слабее.
